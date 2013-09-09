@@ -7,7 +7,14 @@
 				"name":  "foo",
 				"commands" :[
 					"bundle install --path .bundle",
-					"bundle exec rake"
+					"bundle exec rake spec"
+				 ]
+			},
+			{
+				"name":  "bar",
+				"commands" :[
+					"bundle install --path .bundle",
+					"bundle exec rake -T"
 				 ]
 			}
 		]

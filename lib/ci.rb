@@ -84,7 +84,12 @@ module Ci
 			@config    = JSON.parse(File.read(file_path))
 			logger     = Logger.new(config[:logfile] || STDOUT)
 			@pipeline  = Pipeline.from_hash(@config['pipeline'], {:logger => logger})
-			@pipeline.run
+
+			begin
+				@pipeline.run
+			rescue Exception => e
+				logger.error(e.message)
+			end
 		end
 
 	end
