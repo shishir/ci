@@ -21,12 +21,14 @@ module Ci
 			@logger.info(mkdir_p.stdout)
 			mkdir_p.error!
 
-			git_clone = Mixlib::ShellOut.new("git clone #{@material.repository} /tmp/#{@name}")
-			@logger.info("Running git clone")
-			git_clone.run_command
+			unless File.exists?("/tmp/#{@name}/.git")
+				git_clone = Mixlib::ShellOut.new("git clone #{@material.repository} /tmp/#{@name}")
+				@logger.info("Running git clone")
+				git_clone.run_command
+				@logger.info(git_clone.stdout)
+				git_clone.error!
+			end
 
-			@logger.info(git_clone.stdout)
-			git_clone.error!
 			@stages.each do |stage|
 				stage.run
 			end
@@ -76,10 +78,11 @@ module Ci
 
 	class Config
 		attr_reader :pipeline
-		def from_file(file_path)
-			@config = JSON.parse(File.read(file_path))
 
-			logger = Logger.new(STDOUT)
+		def from_file(config)
+			file_path  = config[:config_file]
+			@config    = JSON.parse(File.read(file_path))
+			logger     = Logger.new(config[:logfile] || STDOUT)
 			@pipeline  = Pipeline.from_hash(@config['pipeline'], {:logger => logger})
 			@pipeline.run
 		end
@@ -93,10 +96,14 @@ module Ci
 			:short  => "-c Config",
 			:long   => "--config Config"
 
-		option :build_directory,
-			:short   => "-d directory",
-			:long    => "--build-dir directory",
-			:default => "/tmp"
+		option :logfile,
+			:short   => "-l logfile",
+			:long    => "--log-file logfile"
+
+		option :sha,
+			:short   => "-s sha",
+			:long    => "--sha sha"
+
 	end
 end
 

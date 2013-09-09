@@ -5,7 +5,10 @@
 		"stages":[
 			{
 				"name":  "foo",
-				"commands" :["bundle install --path .bundle"]
+				"commands" :[
+					"bundle install --path .bundle",
+					"bundle exec rake"
+				 ]
 			}
 		]
 	}
