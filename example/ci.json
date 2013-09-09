@@ -1,0 +1,12 @@
+{
+	"pipeline": {
+		"name": "default",
+		"repository": "https://github.com/ThoughtWorksInc/go-api-client.git",
+		"stages":[
+			{
+				"name":  "foo",
+				"commands" :["bundle install --path .bundle"]
+			}
+		]
+	}
+}
