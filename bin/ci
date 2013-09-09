@@ -1,0 +1,10 @@
+#! /usr/bin/env ruby
+
+require_relative('../lib/ci')
+
+cli = Ci::Cli.new
+cli.parse_options
+
+config = Ci::Config.new()
+config.from_file(cli.config)
+
